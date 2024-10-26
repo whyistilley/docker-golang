@@ -54,10 +54,10 @@ compose-build:
 	docker compose --file ${COMPOSE_FILE} build --build-arg LDFLAGS="${LDFLAGS}" --build-arg TEST_LDFLAGS="${TEST_LDFLAGS}" --no-cache
 
 compose-run:
-	docker compose --file ${COMPOSE_FILE} run --rm app bash
+	docker compose --file ${COMPOSE_FILE} run --rm app
 
 compose-up: compose-build
-	docker compose --file ${COMPOSE_FILE} up --force-recreate
+	docker compose --file ${COMPOSE_FILE} up --force-recreate --detach --watch
 
 compose-logs:
 	docker compose --file ${COMPOSE_FILE} logs --follow --timestamps
