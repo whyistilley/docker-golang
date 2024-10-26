@@ -1,0 +1,7 @@
+# Test by running the command: rsync -avn . /dev/shm --exclude-from=./build/.dockerignore
+
+/bin
+/.git
+/.idea
+
+.env

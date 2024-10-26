@@ -1,0 +1,7 @@
+services:
+  app:
+    image: docker-go:latest
+    build:
+      context: ../.
+      dockerfile: ./build/dev.Dockerfile
+    container_name: app
