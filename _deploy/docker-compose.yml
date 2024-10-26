@@ -3,5 +3,5 @@ services:
     image: docker-go:latest
     build:
       context: ../.
-      dockerfile: ./build/dev.Dockerfile
+      dockerfile: ./_build/dev.Dockerfile
     container_name: app
