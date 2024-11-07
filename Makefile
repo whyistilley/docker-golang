@@ -7,25 +7,32 @@ IMAGE_NAME ?= ${REPO_NAME}
 IMAGE_TAG ?= ${REPO_URI}:${GIT_VERSION}-${GIT_COMMIT}
 DOCKERFILE ?= ./_build/Dockerfile
 COMPOSE_FILE ?= ./_deploy/docker-compose.yml
-LDFLAGS ?= -X 'main.commit=${GIT_COMMIT}' -X 'main.version=${GIT_VERSION}' -X 'main.buildDate=${BUILD_DATE}'
-TEST_LDFLAGS ?= -X 'github.com/whyistilley/docker-go/cmd/app.version=${GIT_VERSION}' -X 'github.com/whyistilley/docker-go/cmd/app.commit=${GIT_COMMIT}' -X 'github.com/whyistilley/docker-go/cmd/app.buildDate=${BUILD_DATE}'
+LDFLAGS ?= "-X '${REPO_URI}/internal/service.VersionNumber=${GIT_VERSION}' -X '${REPO_URI}/internal/service.CommitHash=${GIT_COMMIT}' -X '${REPO_URI}/internal/service.BuildDateTime=${BUILD_DATE}'"
+
+include ./.env
 
 .PHONY: build run clean \
  	docker-build docker-run docker-logs docker-remove docker-remove-image docker-clean docker-export docker-remove-export \
  	compose-build compose-run compose-up compose-down compose-remove compose-clean
 
 # To find symbols to overwrite, run the following command: go tool nm ./app | grep app
-build: clean
-	go build -v -p 1 -race -o ./bin/app -ldflags="${LDFLAGS}" ./...
+build-flags: clean
+	go build -v -p 1 -race -o ./bin/ -ldflags=${LDFLAGS} ./...
 
-run: build
-	./bin/app
+build: clean
+	go build -v -p 1 -race -o ./bin/ ./...
+
+run:
+	POSTGRES_URI=${POSTGRES_URI} ./bin/app
 
 clean:
-	rm -rf ./bin/ ./coverage.out
+	rm -rf ./bin ./coverage.out
 
 test:
-	go test -v -p 1 -race -bench=. -benchmem -cover -coverprofile=coverage.out -failfast -ldflags="${TEST_LDFLAGS}" ./...
+	go test -v -p 1 -race -bench=. -benchmem -cover -coverprofile=coverage.out -failfast ./...
+
+test-flags:
+	go test -v -p 1 -race -bench=. -benchmem -cover -coverprofile=coverage.out -failfast -ldflags="${LDFLAGS}" ./...
 
 docker-build:
 	docker build --build-arg LDFLAGS="${LDFLAGS}" --build-arg TEST_LDFLAGS="${TEST_LDFLAGS}" --tag ${IMAGE_TAG} --file ${DOCKER_FILE} --no-cache .
@@ -51,13 +58,13 @@ docker-remove-export:
 	rm -f ${REPO_NAME}.tar
 
 compose-build:
-	docker compose --file ${COMPOSE_FILE} build --build-arg LDFLAGS="${LDFLAGS}" --build-arg TEST_LDFLAGS="${TEST_LDFLAGS}" --no-cache
+	docker compose --file ${COMPOSE_FILE} build --no-cache
 
 compose-run:
-	docker compose --file ${COMPOSE_FILE} run --rm app
+	docker compose --file ${COMPOSE_FILE} run --rm db
 
 compose-up: compose-build
-	docker compose --file ${COMPOSE_FILE} up --force-recreate --detach --watch
+	docker compose --file ${COMPOSE_FILE} up --build --force-recreate --detach
 
 compose-logs:
 	docker compose --file ${COMPOSE_FILE} logs --follow --timestamps

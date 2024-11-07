@@ -41,6 +41,11 @@ New releases will follow the following formats when updating the `CHANGELOG.md`:
 
 ## [Unreleased]
 
+### Added
+
+- Golang / PostgreSQL setup
+- Support for env vars in containers and local builds via Makefile
+
 ## [0.0.0] - 2024-10-26
 
 ### Added
