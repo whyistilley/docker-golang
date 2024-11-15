@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE IF NOT EXISTS users (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
 
@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Seed
-INSERT INTO users (id, name, email)
+INSERT INTO users (name, email)
 VALUES
-    ('000', 'Alice', 'alice@example.com'),
-    ('001', 'Bob', 'bob@example.com'),
-    ('002', 'Charlie', 'charlie@example.com');
+    ('Alice', 'alice@example.com'),
+    ('Bob', 'bob@example.com'),
+    ('Charlie', 'charlie@example.com');

@@ -23,7 +23,7 @@ build: clean
 	go build -v -p 1 -race -o ./bin/ ./...
 
 run:
-	POSTGRES_URI=${POSTGRES_URI} ./bin/app
+	./bin/app
 
 clean:
 	rm -rf ./bin ./coverage.out
@@ -61,7 +61,7 @@ compose-build:
 	docker compose --file ${COMPOSE_FILE} build --no-cache
 
 compose-run:
-	docker compose --file ${COMPOSE_FILE} run --rm db
+	docker compose --file ${COMPOSE_FILE} run --rm app
 
 compose-up: compose-build
 	docker compose --file ${COMPOSE_FILE} up --build --force-recreate --detach

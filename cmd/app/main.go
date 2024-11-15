@@ -10,8 +10,12 @@ import (
 )
 
 var (
-	pqConnStr = os.Getenv("POSTGRES_URI")
+	pqConnStr string
 )
+
+func init() {
+	pqConnStr = os.Getenv("POSTGRES_URI")
+}
 
 func main() {
 	app := service.New("app")

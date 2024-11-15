@@ -1,20 +1,29 @@
 services:
-#  app:
-#    image: docker-go:latest
-#    build:
-#      context: ../.
-#      dockerfile: ./_build/Dockerfile
-#    container_name: app
-#    volumes:
-#      - ../:/usr/src/app
-#    depends_on:
-#      - db
-  db:
-    image: postgres:17.0-bookworm
-    container_name: pgdb
+  app:
+    image: docker-go:latest
+    build:
+      context: ../.
+      dockerfile: ./_build/dev.Dockerfile
+    container_name: app
     env_file:
       - ../.env
     volumes:
-      - ../scripts/db/1-schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ../:/usr/src/app
+    depends_on:
+      database:
+        condition: service_healthy
+  database:
+    image: postgres:17.0-bookworm
+    container_name: database
+    env_file:
+      - ../.env
+    volumes:
+      - ../scripts/db/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 30s
+      retries: 3
+      start_period: 0s
+      timeout: 30s
