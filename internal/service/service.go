@@ -8,22 +8,22 @@ var (
 	BuildDateTime = "buildDateTime"
 )
 
-type Application struct {
-	ApplicationName string
-	CommitHash      string
-	VersionNumber   string
-	BuildDateTime   string
+type Service struct {
+	ServiceName   string
+	CommitHash    string
+	VersionNumber string
+	BuildDateTime string
 }
 
-func New(name string) *Application {
-	return &Application{
-		ApplicationName: name,
-		CommitHash:      CommitHash,
-		VersionNumber:   VersionNumber,
-		BuildDateTime:   BuildDateTime,
+func New(name string) *Service {
+	return &Service{
+		ServiceName:   name,
+		CommitHash:    CommitHash,
+		VersionNumber: VersionNumber,
+		BuildDateTime: BuildDateTime,
 	}
 }
 
-func (a *Application) BuildInfo() string {
-	return fmt.Sprintf("%s %s\nBuild-Date: %s\nRef: %s", a.ApplicationName, a.VersionNumber, a.BuildDateTime, a.CommitHash)
+func (a *Service) BuildInfo() string {
+	return fmt.Sprintf("%s %s\nBuild-Date: %s\nRef: %s", a.ServiceName, a.VersionNumber, a.BuildDateTime, a.CommitHash)
 }
