@@ -47,6 +47,7 @@ New releases will follow the following formats when updating the `CHANGELOG.md`:
 - Support for env vars in containers and local builds via Makefile
 - SQL migrations to seed the PostgreSQL container
 - Support for local development using docker compose
+- Calls to CRUD operations against PostgreSQL 
 
 ## [0.0.0] - 2024-10-26
 
